@@ -20,7 +20,7 @@ vote_cols = {
 # create the Election object and feed it basic data from above
 e = Election(source_file=source_file, vote_cols=vote_cols)
 
-# load the file into a csv and reset relevant attrs
+# load the csv into a data object and reset relevant attrs
 e.bootstrap()
 
 # run the first ballot and report results.
