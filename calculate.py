@@ -19,26 +19,10 @@ e.bootstrap()
 e.first_ballot()
 
 # run the second ballot
-# havnen't written this yet, but will go through all votes. for each one that had the knockout as first element in their
-# vote list(), will take the second element and add to results and then see where we're at percentage-wise
+# haven't written this yet, but will go through all votes. for each one that had the knockout as first element in their
+# vote list(), will take the second element and add to results and then see where we're at percentage-wise.
 # e.second_ballot()
 
-
-
-# first pass: only calculate top choice
-
-# anyone clear the post? done.
-# if not, knock out candidate with fewest first choice; recalc by:
-#   * taking everyone who voted for the loser as FIRST
-#   * treat their second choice as a first choice
-
-# anyone clear the post after looking at second choice? done.
-# if not, KIND OF AN OPEN QUESTION IF WE ONLY HAVE 3 OPTIONS
-# either
-#   * knock out next loser, what's left is winner
-#   * add third pref from people who voted for loser
-#   * add second pref from everyone who didn't vote for winner
-
-#e.first_ballot()
-#e.second_ballot()
-#e.third_ballot()
+# run the third ballot
+# haven't written this yet, also not sure what the right step is at this point.
+# e.third_ballot()

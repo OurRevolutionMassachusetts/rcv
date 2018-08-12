@@ -12,9 +12,9 @@ source_file = '2018_gub/Final Valid Gubernatorial Endorsement Responses.csv'
 
 # columns holding the actual votes, and how to refer to them in results
 vote_cols = {
-    'Select your preference for ORMA gubernatorial endorsement. [Bob Massie]':      'Bob Massie',
-    'Select your preference for ORMA gubernatorial endorsement. [Jay Gonzalez]':    'Jay Gonzalez',
-    'Select your preference for ORMA gubernatorial endorsement. [No Endorsement]':  'No Endorsement'
+    'Select your preference for the election. [Pheobus Apollo]':      'Phoebus Apollo',
+    'Select your preference for the election. [Pallas Athene]':      'Pallas Athene',
+    'Select your preference for ORMA gubernatorial endorsement. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
 # create the Election object and feed it basic data from above
