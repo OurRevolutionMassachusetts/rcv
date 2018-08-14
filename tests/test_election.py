@@ -119,7 +119,7 @@ class ElectionTestCase(unittest.TestCase):
                 '[Black Sabbath]': 'First Preference',
                 '[Napalm Death]': 'Second Preference',
                 '[Cradle of Filth]': 'Third Preference',
-                'Timestamp': '8/4/2018 12:10:04'
+                'Timestamp': '8/5/2018 12:10:04'
             },
 
             {
@@ -127,7 +127,7 @@ class ElectionTestCase(unittest.TestCase):
                 '[Black Sabbath]': 'Second Preference',
                 '[Napalm Death]': 'First Preference',
                 '[Cradle of Filth]': 'Third Preference',
-                'Timestamp': '8/4/2018 13:10:04'
+                'Timestamp': '8/5/2018 13:10:04'
             },
 
             {
@@ -138,3 +138,34 @@ class ElectionTestCase(unittest.TestCase):
                 'Timestamp': '8/4/2018 13:10:04'
             }
         ]
+
+        e.dedupe()
+        self.maxDiff = None
+
+        self.assertEqual(
+            e.data, [
+                {
+                    'Email Address': 'bobbie.gentry@gmail.com',
+                    '[Black Sabbath]': 'Third Preference',
+                    '[Napalm Death]': 'Second Preference',
+                    '[Cradle of Filth]': 'First Preference',
+                    'Timestamp': '8/4/2018 11:10:04'
+                },
+
+                {
+                    'Email Address': 'tom.jones@gmail.com',
+                    '[Black Sabbath]': 'Second Preference',
+                    '[Napalm Death]': 'First Preference',
+                    '[Cradle of Filth]': 'Third Preference',
+                    'Timestamp': '8/5/2018 13:10:04'
+                },
+
+                {
+                    'Email Address': 'glen.campbell@gmail.com',
+                    '[Black Sabbath]': '',
+                    '[Napalm Death]': 'First Preference',
+                    '[Cradle of Filth]': '',
+                    'Timestamp': '8/4/2018 13:10:04'
+                }
+            ]
+        )

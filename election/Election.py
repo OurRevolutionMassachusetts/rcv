@@ -11,6 +11,7 @@ class Election:
         self.timestamp_col = 'Timestamp'
         self.vote_cols = vote_cols
         self.vote_count = 0
+        self.voter_id_col = 'Email Address'
         self.votes = []
 
         if self.order is None:
@@ -23,6 +24,7 @@ class Election:
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
         self.vote_count = len(self.data)
         self.cleanup_unicode()
+        self.dedupe()
 
         self.record_votes()
 
@@ -37,6 +39,36 @@ class Election:
             print(new_row)
             self.data[count] = new_row
             count += 1
+
+    def dedupe(self):
+        from dateutil.parser import parse
+
+        vote_times = {}
+
+        # construct key of voter and most recent timestamp
+        for row in self.data:
+            voter_id = row[self.voter_id_col]
+            this_timestamp = row[self.timestamp_col]
+
+            # If the user has an entry in vote times, compare timestamps. This one earlier? Skip to next row.
+            if voter_id in vote_times:
+                other_timestamp = vote_times[voter_id]
+                this_t = parse(this_timestamp)
+                other_t = parse(other_timestamp)
+                if this_t < other_t:
+                    next
+
+            vote_times[voter_id] = this_timestamp
+
+        new_data = []
+        for row in self.data:
+            voter_id = row[self.voter_id_col]
+            this_timestamp = row[self.timestamp_col]
+            winning_timestamp = vote_times[voter_id]
+            if this_timestamp == winning_timestamp:
+                new_data.append(row)
+
+        self.data = new_data
 
     def first_ballot(self):
         self.results = {v: 0 for (k, v) in self.vote_cols.items()}
