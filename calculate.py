@@ -26,16 +26,13 @@ e.order = preference_order
 
 # in these results, need to swap key and value for results
 e.swap_cols = preference_order
-e.bootstrap(swap_vote_cols=True)
 
 # load list of registered voters
 e.registration_file = registration_file
 e.load_registration()
 
-print("following voters were not registered:")
-print('-----------')
-e.registration_report()
-print()
+# now tabulate
+e.bootstrap(swap_vote_cols=True, drop_interlopers=False)
 
 # run the first ballot
 e.dedupe()

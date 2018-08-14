@@ -29,13 +29,12 @@ e.voter_id_col = 'Email address'
 e.registration_file = '/dir/filename.csv'   # where to find the file
 e.registration_voterid_col = 'email'        # column that lists the "voter_id" for each registrant
 e.registration_report()                     # prints out which voters were not registered
-e.first_ballot(drop_interlopers=True)       # runs ballot leaving out unregistered voters
 
 # create the Election object and feed it basic data from above
 e = Election(source_file=source_file, vote_cols=vote_cols)
 
 # load the csv into a data object and reset relevant attrs
-e.bootstrap()
+e.bootstrap(drop_interlopers=True)
 
 # run the first ballot and report results.
 e.first_ballot()

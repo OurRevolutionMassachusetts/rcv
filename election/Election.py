@@ -9,6 +9,7 @@ class Election:
         self.interlopers = []
         self.knockouts = []
         self.order = order
+        self.raw_vote_count = 0
         self.registration_data = []
         self.registration_file = None
         self.registration_voterid_col = 'email'
@@ -25,18 +26,19 @@ class Election:
         if self.order is None:
             self.order = ['First Preference', 'Second Preference', 'Third Preference']
 
-    def bootstrap(self, swap_vote_cols=False):
+    def bootstrap(self, swap_vote_cols=False, drop_interlopers=False):
         self.ballots_run = []
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
         self.data = self.preen_voter_ids(data=self.data, voter_id_col=self.voter_id_col)
         if swap_vote_cols:
             self.swap_vote_cols()
-        self.vote_count = len(self.data)
+        self.raw_vote_count = len(self.data)
         self.cleanup_unicode()
         self.dedupe()
 
-        self.record_votes()
+        self.record_votes(drop_interlopers=drop_interlopers)
+        self.vote_count = len(self.votes)
 
     def cleanup_unicode(self):
         count = 0
@@ -65,7 +67,7 @@ class Election:
                 this_t = parse(this_timestamp)
                 other_t = parse(other_timestamp)
                 if this_t < other_t:
-                    next
+                    continue
 
             vote_times[voter_id] = this_timestamp
 
@@ -105,8 +107,20 @@ class Election:
                                                       voter_id_col=self.registration_voterid_col)
 
     # for easy extraction, for each voter construct an array in order of preferences
-    def record_votes(self):
+    def record_votes(self, drop_interlopers=False):
+        interlopers = []
+        if drop_interlopers:
+            if self.interlopers == []:
+                self.find_interlopers()
+            interlopers = [row[self.voter_id_col] for row in self.interlopers]
+
         for row in self.data:
+            # are we dropping this voter for being unregistered?
+            if drop_interlopers:
+                if row[self.voter_id_col] in interlopers:
+                    print('!!! dropping vote for ' + row[self.voter_id_col] + ' (not registered)')
+                    continue
+
             vote_dict = {}
             vote = []
 
