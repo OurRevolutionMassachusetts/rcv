@@ -284,3 +284,25 @@ class ElectionTestCase(unittest.TestCase):
                 'last_name': 'Gentry'
             }
         ]
+
+        e.find_interlopers()
+        self.assertEqual(
+            [
+                {
+                    'Email Address': 'tom.jones@gmail.com',
+                    '[Black Sabbath]': 'First Preference',
+                    '[Napalm Death]': 'Second Preference',
+                    '[Cradle of Filth]': 'Third Preference',
+                    'Timestamp': '8/5/2018 12:10:04'
+                },
+
+                {
+                    'Email Address': 'tom.jones@gmail.com',
+                    '[Black Sabbath]': 'Second Preference',
+                    '[Napalm Death]': 'First Preference',
+                    '[Cradle of Filth]': 'Third Preference',
+                    'Timestamp': '8/5/2018 13:10:04'
+                }
+            ],
+            e.interlopers
+        )

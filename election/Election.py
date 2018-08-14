@@ -5,6 +5,7 @@ class Election:
         self.data = None
         self.ballots_run = []
         self.finish_line = finish_line
+        self.interlopers = []
         self.knockouts = []
         self.order = order
         self.registration_data = []
@@ -41,7 +42,6 @@ class Election:
                 if '\ufeff' in k:
                     k = k.replace(u'\ufeff', '')
                 new_row[k] = v
-            print(new_row)
             self.data[count] = new_row
             count += 1
 
@@ -74,6 +74,15 @@ class Election:
                 new_data.append(row)
 
         self.data = new_data
+
+    def find_interlopers(self):
+        # take our registration data and build a simple list of registered voter ids
+        registered_ids = [row[self.registration_voterid_col] for row in self.registration_data]
+
+        self.interlopers = []
+        for row in self.data:
+            if row[self.voter_id_col] not in registered_ids:
+                self.interlopers.append(row)
 
     def first_ballot(self, drop_interlopers=False):
         self.results = {v: 0 for (k, v) in self.vote_cols.items()}
@@ -111,6 +120,11 @@ class Election:
                     vote.append(None)
 
             self.votes.append(vote)
+
+    def registration_report(self):
+        if self.interlopers == []:
+            self.find_interlopers()
+        print(*(row[self.voter_id_col] for row in self.interlopers), sep='\n')
 
     def report(self):
         ballot_name = self.ballots_run[-1] + ' ballot'
