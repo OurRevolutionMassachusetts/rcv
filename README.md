@@ -17,6 +17,12 @@ vote_cols = {
     'Select your preference for ORMA gubernatorial endorsement. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
+# column that indicates when vote was taken; allows automatic de-duping of votes by accepting only the last one for each
+# voter (where email address is treated as the voter's "unique id")
+#
+# default value is Timestamp
+e.timestamp_col = 'Timestamp'
+
 # create the Election object and feed it basic data from above
 e = Election(source_file=source_file, vote_cols=vote_cols)
 
