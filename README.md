@@ -17,10 +17,19 @@ vote_cols = {
     'Select your preference for ORMA gubernatorial endorsement. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
-# Election.timestamp_col: spreadsheet column that indicates when vote was taken (default value is 'Timestamp')
-# Election.voter_id: spreadsheet column that marks the user's "unique id" (default value is 'Email address')
+# Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
+# Election.voter_id: CSVcolumn that marks the user's "unique id" (default value is 'Email address')
 e.timestamp_col = 'Timestamp'
 e.voter_id_col = 'Email address'
+
+# The system is able to refer to a CSV file that lists all eligible voters. From there you can simply report on those
+# that do no appear in the "registration" file, or run the results leaving those people out.
+#
+# This file should be placed somewhere in the "source" folder
+e.registration_file = '/dir/filename.csv'   # where to find the file
+e.registration_voterid_col = 'email'        # column that lists the "voter_id" for each registrant
+e.registration_report()                     # prints out which voters were not registered
+e.first_ballot(drop_interlopers=True)       # runs ballot leaving out unregistered voters
 
 # create the Election object and feed it basic data from above
 e = Election(source_file=source_file, vote_cols=vote_cols)
