@@ -34,6 +34,9 @@ e.registration_report()                     # prints out which voters were not r
 e = Election(source_file=source_file, vote_cols=vote_cols)
 
 # load the csv into a data object and reset relevant attrs
+# the "drop_interlopers" arg allows you to kick out votes from people who don't appear in your registration data.
+# if you want to run ballots both with and without unregistered voters, you'll need to run a separate bootstrap() for
+# each scenario.
 e.bootstrap(drop_interlopers=True)
 
 # run the first ballot and report results.
