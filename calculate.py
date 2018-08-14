@@ -1,6 +1,7 @@
 from election.Election import Election
 
-source_file = '2018_gub/Final Valid Gubernatorial Endorsement Responses.csv'
+registration_file = '2018_msex_da/middlesex an.csv'
+source_file = '2018_msex_da/ORMA Middlesex DA Endorsement Poll (Responses) - Form Responses 1.csv'
 
 # name of the columns holding the actual votes, and how to refer to them in results
 vote_cols = {
@@ -10,7 +11,13 @@ vote_cols = {
 }
 
 # create the Election object and feed it basic data
-e = Election(source_file=source_file, vote_cols=vote_cols)
+e = Election()
+e.source_file = source_file
+e.vote_cols = vote_cols
+e.registration_file = registration_file
+
+import sys
+sys.exit(0)
 
 # load the csv into a data object and reset relevant attrs
 e.bootstrap()

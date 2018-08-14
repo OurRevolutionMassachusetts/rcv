@@ -1,3 +1,5 @@
+import csv
+
 class Election:
     def __init__(self, vote_cols=None, source_file=None, order=None, finish_line=60):
         self.data = None
@@ -5,6 +7,9 @@ class Election:
         self.finish_line = finish_line
         self.knockouts = []
         self.order = order
+        self.registration_data = []
+        self.registration_file = None
+        self.registration_voterid_col = 'email'
         self.results = {}
         self.source_dir = './source/'
         self.source_file = source_file
@@ -18,7 +23,6 @@ class Election:
             self.order = ['First Preference', 'Second Preference', 'Third Preference']
 
     def bootstrap(self):
-        import csv
         self.ballots_run = []
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
@@ -70,7 +74,7 @@ class Election:
 
         self.data = new_data
 
-    def first_ballot(self):
+    def first_ballot(self, drop_interlopers=False):
         self.results = {v: 0 for (k, v) in self.vote_cols.items()}
 
         # for the first ballot, we simply record everyone's first choice
@@ -80,6 +84,9 @@ class Election:
 
         self.ballots_run.append('first')
         self.report()
+
+    def load_registration(self):
+        self.registration_data = list(csv.DictReader(open(self.source_dir + self.registration_file)))
 
     # for easy extraction, for each voter construct an array in order of preferences
     def record_votes(self):
