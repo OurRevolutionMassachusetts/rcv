@@ -1,5 +1,6 @@
 import csv
 
+
 class Election:
     def __init__(self, vote_cols=None, source_file=None, order=None, finish_line=60):
         self.data = None
@@ -24,11 +25,13 @@ class Election:
         if self.order is None:
             self.order = ['First Preference', 'Second Preference', 'Third Preference']
 
-    def bootstrap(self):
+    def bootstrap(self, swap_vote_cols=False):
         self.ballots_run = []
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
         self.data = self.preen_voter_ids(data=self.data, voter_id_col=self.voter_id_col)
+        if swap_vote_cols:
+            self.swap_vote_cols()
         self.vote_count = len(self.data)
         self.cleanup_unicode()
         self.dedupe()
@@ -109,9 +112,10 @@ class Election:
 
             # create a key/value dict based on first pref/second pref/etc
             for col, shortname in self.vote_cols.items():
-                choice = row[col]
-                if choice:
-                    vote_dict[choice] = shortname
+                if col in row:
+                    choice = row[col]
+                    if choice:
+                        vote_dict[choice] = shortname
 
             # use that dict to construct a simple ordered list of the user's choices
             for col in self.order:

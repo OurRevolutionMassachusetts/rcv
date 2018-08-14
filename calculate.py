@@ -5,17 +5,28 @@ source_file = '2018_msex_da/ORMA Middlesex DA Endorsement Poll (Responses) - For
 
 # name of the columns holding the actual votes, and how to refer to them in results
 vote_cols = {
-    'Select your preference for the election. [Pheobus Apollo]':      'Phoebus Apollo',
-    'Select your preference for the election. [Pallas Athene]':      'Pallas Athene',
-    'Select your preference for ORMA gubernatorial endorsement. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
+    'DONNA PATALANO, challenger':      'Donna Patalano',
+    'NO ENDORSEMENT':      'NO ENDORSEMENT',
+    'MARIAN RYAN, incumbent':  'Marian Ryan'
 }
+
+# preference order
+preference_order = [
+    'ORMA Middlesex DA Endorsement [First preference]',
+    'ORMA Middlesex DA Endorsement [Second preference]',
+    'ORMA Middlesex DA Endorsement [Third preference]'
+]
 
 # create the Election object and feed it basic data
 e = Election()
 e.voter_id_col = 'Email address'
 e.source_file = source_file
 e.vote_cols = vote_cols
-e.bootstrap()
+e.order = preference_order
+
+# in these results, need to swap key and value for results
+e.swap_cols = preference_order
+e.bootstrap(swap_vote_cols=True)
 
 # load list of registered voters
 e.registration_file = registration_file
@@ -28,11 +39,6 @@ print()
 
 # run the first ballot
 e.dedupe()
-print(e.data)
-
-import sys
-sys.exit(0)
-
 e.first_ballot()
 
 # run the second ballot
