@@ -14,7 +14,11 @@ vote_cols = {
 e = Election()
 e.source_file = source_file
 e.vote_cols = vote_cols
+
+# load list of registered voters
 e.registration_file = registration_file
+e.load_registration()
+
 
 import sys
 sys.exit(0)

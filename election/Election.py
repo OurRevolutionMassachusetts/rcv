@@ -26,6 +26,7 @@ class Election:
         self.ballots_run = []
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
+        self.data = self.preen_voter_ids(data=self.data, voter_id_col=self.voter_id_col)
         self.vote_count = len(self.data)
         self.cleanup_unicode()
         self.dedupe()
@@ -87,6 +88,8 @@ class Election:
 
     def load_registration(self):
         self.registration_data = list(csv.DictReader(open(self.source_dir + self.registration_file)))
+        self.registration_data = self.preen_voter_ids(data=self.registration_data,
+                                                      voter_id_col=self.registration_voterid_col)
 
     # for easy extraction, for each voter construct an array in order of preferences
     def record_votes(self):
@@ -122,3 +125,11 @@ class Election:
                 winner = ' ** WINNER **'
 
             print(choice + ': ' + str(raw) + ' (' + str(percentage) + '% of ' + str(self.vote_count) + ')' + winner)
+
+    @staticmethod
+    def preen_voter_ids(data, voter_id_col):
+        count = 0
+        for row in data:
+            data[count][voter_id_col] = str(data[count][voter_id_col]).lower()
+            count += 1
+        return data
