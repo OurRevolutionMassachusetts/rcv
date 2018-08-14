@@ -20,7 +20,7 @@ vote_cols = {
 # Election.timestamp_col: spreadsheet column that indicates when vote was taken (default value is 'Timestamp')
 # Election.voter_id: spreadsheet column that marks the user's "unique id" (default value is 'Email address')
 e.timestamp_col = 'Timestamp'
-e.voter_id = 'Email address'
+e.voter_id_col = 'Email address'
 
 # create the Election object and feed it basic data from above
 e = Election(source_file=source_file, vote_cols=vote_cols)
