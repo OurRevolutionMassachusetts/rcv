@@ -22,8 +22,21 @@ class Election:
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
         self.vote_count = len(self.data)
+        self.cleanup_unicode()
 
         self.record_votes()
+
+    def cleanup_unicode(self):
+        count = 0
+        for row in self.data:
+            new_row = {}
+            for k,v in row.items():
+                if '\ufeff' in k:
+                    k = k.replace(u'\ufeff', '')
+                new_row[k] = v
+            print(new_row)
+            self.data[count] = new_row
+            count += 1
 
     def first_ballot(self):
         self.results = {v: 0 for (k, v) in self.vote_cols.items()}
