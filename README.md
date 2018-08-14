@@ -14,7 +14,7 @@ source_file = '2018_gub/Final Valid Gubernatorial Endorsement Responses.csv'
 vote_cols = {
     'Select your preference for the election. [Pheobus Apollo]':      'Phoebus Apollo',
     'Select your preference for the election. [Pallas Athene]':      'Pallas Athene',
-    'Select your preference for ORMA gubernatorial endorsement. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
+    'Select your preference for the election. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
 # Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')

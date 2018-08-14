@@ -306,3 +306,60 @@ class ElectionTestCase(unittest.TestCase):
             ],
             e.interlopers
         )
+
+    def test_swap_vote_cols(self):
+        e = Election()
+        e.data = [
+            {
+                'Email Address': 'bobbie.gentry@gmail.com',
+                'First Preference': 'Black Sabbath',
+                'Second Preference': 'Napalm Death',
+                'Third Preference': 'Cradle of Filth',
+                'Timestamp': '8/3/2018 12:10:04'
+            },
+
+            {
+                'Email Address': 'tom.jones@gmail.com',
+                'First Preference': 'Napalm Death',
+                'Second Preference': 'Black Sabbath',
+                'Third Preference': 'Cradle of Filth',
+                'Timestamp': '8/5/2018 13:10:04'
+            },
+
+            {
+                'Email Address': 'glen.campbell@gmail.com',
+                'First Preference': 'Napalm Death',
+                'Second Preference': '',
+                'Third Preference': '',
+                'Timestamp': '8/4/2018 13:10:04'
+            }
+        ]
+
+        e.swap_cols = ['First Preference', 'Second Preference', 'Third Preference']
+        e.swap_vote_cols()
+        self.assertEqual(
+            [
+                {
+                    'Email Address': 'bobbie.gentry@gmail.com',
+                    'Black Sabbath': 'First Preference',
+                    'Napalm Death': 'Second Preference',
+                    'Cradle of Filth': 'Third Preference',
+                    'Timestamp': '8/3/2018 12:10:04'
+                },
+
+                {
+                    'Email Address': 'tom.jones@gmail.com',
+                    'Napalm Death': 'First Preference',
+                    'Black Sabbath': 'Second Preference',
+                    'Cradle of Filth': 'Third Preference',
+                    'Timestamp': '8/5/2018 13:10:04'
+                },
+
+                {
+                    'Email Address': 'glen.campbell@gmail.com',
+                    'Napalm Death': 'First Preference',
+                    'Timestamp': '8/4/2018 13:10:04'
+                }
+            ],
+            e.data
+        )

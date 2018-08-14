@@ -14,6 +14,7 @@ class Election:
         self.results = {}
         self.source_dir = './source/'
         self.source_file = source_file
+        self.swap_cols = []
         self.timestamp_col = 'Timestamp'
         self.vote_cols = vote_cols
         self.vote_count = 0
@@ -139,6 +140,24 @@ class Election:
                 winner = ' ** WINNER **'
 
             print(choice + ': ' + str(raw) + ' (' + str(percentage) + '% of ' + str(self.vote_count) + ')' + winner)
+
+    # this code was built expecting that the results CSV would have the candidate listed as the column, and the
+    # preference listed as the value in the row. For cases where that's been reversed, this normalizes our data to work
+    # with the logic as it exists.
+    def swap_vote_cols(self):
+        new_data = []
+
+        for row in self.data:
+            new_row = {}
+            for k,v in row.items():
+                if k in self.swap_cols:
+                    if v:
+                        new_row[v] = k
+                else:
+                    new_row[k] = v
+            new_data.append(new_row)
+
+        self.data = new_data
 
     @staticmethod
     def preen_voter_ids(data, voter_id_col):

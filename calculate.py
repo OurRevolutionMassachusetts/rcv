@@ -5,9 +5,9 @@ source_file = '2018_msex_da/ORMA Middlesex DA Endorsement Poll (Responses) - For
 
 # name of the columns holding the actual votes, and how to refer to them in results
 vote_cols = {
-    'ORMA Middlesex DA Endorsement [First preference]':     'First preference',
-    'ORMA Middlesex DA Endorsement [Second preference]':    'Second preference',
-    'ORMA Middlesex DA Endorsement [Third preference]':     'Third preference'
+    'Select your preference for the election. [Pheobus Apollo]':      'Phoebus Apollo',
+    'Select your preference for the election. [Pallas Athene]':      'Pallas Athene',
+    'Select your preference for ORMA gubernatorial endorsement. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
 # create the Election object and feed it basic data
@@ -20,16 +20,19 @@ e.bootstrap()
 # load list of registered voters
 e.registration_file = registration_file
 e.load_registration()
-e.registration_report()
 
+print("following voters were not registered:")
+print('-----------')
+e.registration_report()
+print()
+
+# run the first ballot
+e.dedupe()
+print(e.data)
 
 import sys
 sys.exit(0)
 
-# load the csv into a data object and reset relevant attrs
-
-
-# run the first ballot
 e.first_ballot()
 
 # run the second ballot
