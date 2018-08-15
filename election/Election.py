@@ -26,12 +26,12 @@ class Election:
         if self.order is None:
             self.order = ['First Preference', 'Second Preference', 'Third Preference']
 
-    def bootstrap(self, swap_vote_cols=False, drop_interlopers=False):
+    def bootstrap(self, cols_hold_prefs=False, drop_interlopers=False):
         self.ballots_run = []
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
         self.data = self.preen_voter_ids(data=self.data, voter_id_col=self.voter_id_col)
-        if swap_vote_cols:
+        if cols_hold_prefs:
             self.swap_vote_cols()
         self.raw_vote_count = len(self.data)
         self.cleanup_unicode()

@@ -2,7 +2,21 @@ Script for calculating RCV results, based on CSV file (in our case, drawn from G
 
 *requires python3*
 
-See calculate.py for sample usage. General sample usage here:
+# Using the *cols_hold_prefs* arg to bootstrap():
+
+Use *cols_hold_prefs=False* if your vote data looks like
+```
+email,candidate 1,candidate 2
+bernie@ourrev.org,First Preference,Second Preference
+```
+
+Use *cols_hold_prefs=True* if your vote data looks like
+```
+email,First Preference,Second Preference
+bernie@ourrev.org,candidate 1,candidate 2
+```
+
+Sample usage here:
 
 ```python3
 from election.Election import Election
@@ -18,7 +32,7 @@ vote_cols = {
 }
 
 # Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
-# Election.voter_id: CSVcolumn that marks the user's "unique id" (default value is 'Email address')
+# Election.voter_id: CSV column that marks the user's "unique id" (default value is 'Email address')
 e.timestamp_col = 'Timestamp'
 e.voter_id_col = 'Email address'
 
@@ -34,10 +48,16 @@ e.registration_report()                     # prints out which voters were not r
 e = Election(source_file=source_file, vote_cols=vote_cols)
 
 # load the csv into a data object and reset relevant attrs
-# the "drop_interlopers" arg allows you to kick out votes from people who don't appear in your registration data.
+#
+# *drop_interlopers* allows you to kick out votes from people who don't appear in your registration data.
 # if you want to run ballots both with and without unregistered voters, you'll need to run a separate bootstrap() for
-# each scenario.
-e.bootstrap(drop_interlopers=True)
+# each scenario. Defaults to False
+#
+# *cols_hold_prefs* background: the engine for loading votes assumes that the cols of the CSV hold the candidates, and
+# the rows list the preference for each voter. Depending on how the ballot form is structured, data might come in with
+# the preferences as column headers, and the candidates as values. For the latter case, set this value to True. Defaults
+#
+e.bootstrap(drop_interlopers=True, cols_list_cols_list_preference=False)
 
 # run the first ballot and report results.
 e.first_ballot()
