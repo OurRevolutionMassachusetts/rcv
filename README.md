@@ -57,7 +57,7 @@ e.registration_report()                     # prints out which voters were not r
 # the rows list the preference for each voter. Depending on how the ballot form is structured, data might come in with
 # the preferences as column headers, and the candidates as values. For the latter case, set this value to True. Defaults
 #
-e.bootstrap(drop_interlopers=True, cols_list_cols_list_preference=False)
+e.bootstrap(drop_interlopers=True, cols_list_preference=False)
 
 # run the first ballot and report results.
 e.first_ballot()
