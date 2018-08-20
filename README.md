@@ -82,11 +82,5 @@ e.registration_report()                     # prints out which voters were not r
 e.first_ballot()
 
 # run the second ballot
-# haven't written this yet, but will go through all votes. for each one that had the knockout as first element in their
-# vote list(), will take the second element and add to results and then see where we're at percentage-wise.
-# e.second_ballot()
-
-# run the third ballot
-# haven't written this yet, also not sure what the right step is at this point.
-# e.third_ballot()
+e.second_ballot(knockout='Poseidon Earthshaker'))
 ```

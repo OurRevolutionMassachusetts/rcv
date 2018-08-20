@@ -97,7 +97,7 @@ class Election:
             if row[self.voter_id_col] not in registered_ids and row[self.voter_id_col] not in self.whitelist:
                 self.interlopers.append(row)
 
-    def first_ballot(self, drop_interlopers=False):
+    def first_ballot(self):
         self.results = {v: 0 for (k, v) in self.vote_cols.items()}
 
         # for the first ballot, we simply record everyone's first choice
@@ -151,7 +151,7 @@ class Election:
         if self.interlopers == []:
             self.find_interlopers()
 
-        print(str(len(self.interlopers)) + " suspected interlopers")
+        print(str(len(self.interlopers)) + " questionable voters")
         print(*(row[self.voter_id_col] for row in self.interlopers), sep='\n')
 
     def report(self):
@@ -172,6 +172,23 @@ class Election:
 
         report.sort()
         print(*(r for r in report), sep="\n")
+        print()
+
+    def second_ballot(self, knockout):
+        self.results = {v: 0 for (k, v) in self.vote_cols.items()}
+        self.knockouts.append(knockout)
+
+        # For the second ballot, we drop all references to the knockout. This will promote all their other preferences
+        # that came after. Result: if the knockout was first, their second pref is now first. We can again just grab
+        # the first choice.
+        for row in self.votes:
+            new_row = [choice for choice in row if choice not in self.knockouts]
+            row = new_row
+            if row[0]:
+                self.results[row[0]] += 1
+
+        self.ballots_run.append('second')
+        self.report()
 
     # this code was built expecting that the results CSV would have the candidate listed as the column, and the
     # preference listed as the value in the row. For cases where that's been reversed, this normalizes our data to work
