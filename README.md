@@ -24,6 +24,11 @@ from election.Election import Election
 # In the source folder, put your CSV (with "unix" style line breaks), and provide relative path from 'source/'
 source_file = '2018_gub/Final Valid Gubernatorial Endorsement Responses.csv'
 
+# Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
+# Election.voter_id: CSV column that marks the user's "unique id" (default value is 'Email address')
+timestamp_col = 'Timestamp'
+voter_id_col = 'Email address'
+
 # columns holding the actual votes, and how to refer to them in results
 vote_cols = {
     'Select your preference for the election. [Pheobus Apollo]':      'Phoebus Apollo',
@@ -31,10 +36,11 @@ vote_cols = {
     'Select your preference for the election. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
-# Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
-# Election.voter_id: CSV column that marks the user's "unique id" (default value is 'Email address')
-timestamp_col = 'Timestamp'
-voter_id_col = 'Email address'
+# voters that will fail "validation" but are known to be valid
+whitelist = [
+    'heracles@crete.org',
+    'jason@colchisgates.com'
+]
 
 ##############
 # end of values you normally need to update for each run
@@ -46,7 +52,7 @@ e.source_file = source_file
 e.vote_cols = vote_cols
 e.timestamp_col = timestamp_col
 e.voter_id_col = voter_id_col
-
+e.whitelist = whitelist
 
 # The system is able to refer to a CSV file that lists all eligible voters. From there you can simply report on those
 # that do no appear in the "registration" file, or run the results leaving those people out.

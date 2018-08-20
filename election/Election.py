@@ -18,6 +18,7 @@ class Election:
         self.source_file = source_file
         self.swap_cols = []
         self.timestamp_col = 'Timestamp'
+        self.whitelist = []
         self.vote_cols = vote_cols
         self.vote_count = 0
         self.voter_id_col = 'Email Address'
@@ -85,12 +86,15 @@ class Election:
         self.data = new_data
 
     def find_interlopers(self):
+        if type(self.whitelist) is not list:
+            self.whitelist = []
+
         # take our registration data and build a simple list of registered voter ids
         registered_ids = [row[self.registration_voterid_col] for row in self.registration_data]
 
         self.interlopers = []
         for row in self.data:
-            if row[self.voter_id_col] not in registered_ids:
+            if row[self.voter_id_col] not in registered_ids and row[self.voter_id_col] not in self.whitelist:
                 self.interlopers.append(row)
 
     def first_ballot(self, drop_interlopers=False):
@@ -155,6 +159,8 @@ class Election:
         print(ballot_name)
         print('--------')
 
+        report = []
+
         for choice, raw in self.results.items():
             percentage = round(((raw / self.vote_count) * 100), 2)
 
@@ -162,7 +168,10 @@ class Election:
             if percentage >= self.finish_line:
                 winner = ' ** WINNER **'
 
-            print(choice + ': ' + str(raw) + ' (' + str(percentage) + '% of ' + str(self.vote_count) + ')' + winner)
+            report.append((choice + ': ' + str(raw) + ' (' + str(percentage) + '% of ' + str(self.vote_count) + ')' + winner))
+
+        report.sort()
+        print(*(r for r in report), sep="\n")
 
     # this code was built expecting that the results CSV would have the candidate listed as the column, and the
     # preference listed as the value in the row. For cases where that's been reversed, this normalizes our data to work
