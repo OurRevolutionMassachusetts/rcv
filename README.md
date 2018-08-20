@@ -29,6 +29,14 @@ source_file = '2018_gub/Final Valid Gubernatorial Endorsement Responses.csv'
 timestamp_col = 'Timestamp'
 voter_id_col = 'Email address'
 
+# The system is able to refer to a CSV file that lists all eligible voters. From there you can simply report on those
+# that do no appear in the "registration" file, or run the results leaving those people out.
+#
+# This file should be placed somewhere in the "source" folder
+registration_file = '/dir/filename.csv'   # where to find the file
+registration_voterid_col = 'email'        # column that lists the "voter_id" for each registrant
+
+
 # columns holding the actual votes, and how to refer to them in results
 vote_cols = {
     'Select your preference for the election. [Pheobus Apollo]':      'Phoebus Apollo',
@@ -53,13 +61,8 @@ e.vote_cols = vote_cols
 e.timestamp_col = timestamp_col
 e.voter_id_col = voter_id_col
 e.whitelist = whitelist
-
-# The system is able to refer to a CSV file that lists all eligible voters. From there you can simply report on those
-# that do no appear in the "registration" file, or run the results leaving those people out.
-#
-# This file should be placed somewhere in the "source" folder
-e.registration_file = '/dir/filename.csv'   # where to find the file
-e.registration_voterid_col = 'email'        # column that lists the "voter_id" for each registrant
+e.registration_file = registration_file
+e.registration_voterid_col = registration_voterid_col
 
 # load the csv into a data object and reset relevant attrs
 #

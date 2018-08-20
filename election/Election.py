@@ -30,7 +30,7 @@ class Election:
     def bootstrap(self, cols_hold_prefs=False, drop_interlopers=False):
         self.ballots_run = []
         self.knockouts = []
-        self.data = list(csv.DictReader(open(self.source_dir + self.source_file)))
+        self.data = list(csv.DictReader(open(self.source_dir + self.source_file, 'U')))
         self.data = self.preen_voter_ids(data=self.data, voter_id_col=self.voter_id_col)
         if cols_hold_prefs:
             self.swap_vote_cols()
@@ -109,7 +109,7 @@ class Election:
         self.report()
 
     def load_registration(self):
-        self.registration_data = list(csv.DictReader(open(self.source_dir + self.registration_file)))
+        self.registration_data = list(csv.DictReader(open(self.source_dir + self.registration_file, 'U')))
         self.registration_data = self.preen_voter_ids(data=self.registration_data,
                                                       voter_id_col=self.registration_voterid_col)
 
