@@ -32,7 +32,9 @@ vote_cols = {
 }
 
 # create the Election object and feed it basic data from above
-e = Election(source_file=source_file, vote_cols=vote_cols)
+e = Election()
+e.source_file = source_file
+e.vote_cols = vote_cols
 
 # Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
 # Election.voter_id: CSV column that marks the user's "unique id" (default value is 'Email address')
@@ -57,7 +59,7 @@ e.registration_report()                     # prints out which voters were not r
 # the rows list the preference for each voter. Depending on how the ballot form is structured, data might come in with
 # the preferences as column headers, and the candidates as values. For the latter case, set this value to True. Defaults
 #
-e.bootstrap(drop_interlopers=True, cols_list_preference=False)
+e.bootstrap(drop_interlopers=True, cols_hold_prefs=False)
 
 # run the first ballot and report results.
 e.first_ballot()
