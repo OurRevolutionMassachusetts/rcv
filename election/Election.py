@@ -4,7 +4,7 @@ import csv
 class Election:
     def __init__(self, vote_cols=None, source_file=None, order=None, finish_line=60):
         self.data = None
-        self.ballots_run = []
+        self.ballots_run = 0
         self.finish_line = finish_line
         self.interlopers = []
         self.knockouts = []
@@ -28,7 +28,7 @@ class Election:
             self.order = ['First Preference', 'Second Preference', 'Third Preference']
 
     def bootstrap(self, cols_hold_prefs=False, drop_interlopers=False):
-        self.ballots_run = []
+        self.ballots_run = 0
         self.knockouts = []
         self.data = list(csv.DictReader(open(self.source_dir + self.source_file, 'U')))
         self.data = self.preen_voter_ids(data=self.data, voter_id_col=self.voter_id_col)
@@ -97,21 +97,24 @@ class Election:
             if row[self.voter_id_col] not in registered_ids and row[self.voter_id_col] not in self.whitelist:
                 self.interlopers.append(row)
 
-    def first_ballot(self):
-        self.results = {v: 0 for (k, v) in self.vote_cols.items()}
-
-        # for the first ballot, we simply record everyone's first choice
-        for row in self.votes:
-            if row[0]:
-                self.results[row[0]] += 1
-
-        self.ballots_run.append('first')
-        self.report()
-
     def load_registration(self):
         self.registration_data = list(csv.DictReader(open(self.source_dir + self.registration_file, 'U')))
         self.registration_data = self.preen_voter_ids(data=self.registration_data,
                                                       voter_id_col=self.registration_voterid_col)
+
+    def next_ballot(self, knockout=False):
+        self.results = {v: 0 for (k, v) in self.vote_cols.items()}
+        if knockout:
+            self.knockouts.append(knockout)
+
+        for row in self.votes:
+            new_row = [choice for choice in row if (not choice or choice not in self.knockouts)]
+            row = new_row
+            if row[0]:
+                self.results[row[0]] += 1
+
+        self.ballots_run += 1
+        self.report()
 
     # for easy extraction, for each voter construct an array in order of preferences
     def record_votes(self, drop_interlopers=False):
@@ -155,7 +158,7 @@ class Election:
         print(*(row[self.voter_id_col] for row in self.interlopers), sep='\n')
 
     def report(self):
-        ballot_name = self.ballots_run[-1] + ' ballot'
+        ballot_name = 'ballot #' + str(self.ballots_run)
         print(ballot_name)
         print('--------')
 
@@ -173,22 +176,6 @@ class Election:
         report.sort()
         print(*(r for r in report), sep="\n")
         print()
-
-    def second_ballot(self, knockout):
-        self.results = {v: 0 for (k, v) in self.vote_cols.items()}
-        self.knockouts.append(knockout)
-
-        # For the second ballot, we drop all references to the knockout. This will promote all their other preferences
-        # that came after. Result: if the knockout was first, their second pref is now first. We can again just grab
-        # the first choice.
-        for row in self.votes:
-            new_row = [choice for choice in row if choice not in self.knockouts]
-            row = new_row
-            if row[0]:
-                self.results[row[0]] += 1
-
-        self.ballots_run.append('second')
-        self.report()
 
     # this code was built expecting that the results CSV would have the candidate listed as the column, and the
     # preference listed as the value in the row. For cases where that's been reversed, this normalizes our data to work
