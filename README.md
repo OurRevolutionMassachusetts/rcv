@@ -47,7 +47,6 @@ e.voter_id_col = 'Email address'
 # This file should be placed somewhere in the "source" folder
 e.registration_file = '/dir/filename.csv'   # where to find the file
 e.registration_voterid_col = 'email'        # column that lists the "voter_id" for each registrant
-e.registration_report()                     # prints out which voters were not registered
 
 # load the csv into a data object and reset relevant attrs
 #
@@ -60,6 +59,8 @@ e.registration_report()                     # prints out which voters were not r
 # the preferences as column headers, and the candidates as values. For the latter case, set this value to True. Defaults
 #
 e.bootstrap(drop_interlopers=True, cols_hold_prefs=False)
+
+e.registration_report()                     # prints out which voters were not registered
 
 # run the first ballot and report results.
 e.first_ballot()
