@@ -37,6 +37,9 @@ class Election:
         self.cleanup_unicode()
         self.dedupe()
 
+        if self.registration_file:
+            self.load_registration()
+
         self.record_votes(drop_interlopers=drop_interlopers)
         self.vote_count = len(self.votes)
 
