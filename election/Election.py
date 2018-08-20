@@ -146,6 +146,8 @@ class Election:
     def registration_report(self):
         if self.interlopers == []:
             self.find_interlopers()
+
+        print(str(len(self.interlopers)) + " suspected interlopers")
         print(*(row[self.voter_id_col] for row in self.interlopers), sep='\n')
 
     def report(self):

@@ -31,15 +31,22 @@ vote_cols = {
     'Select your preference for the election. [Poseidon Earthshaker]':  'Poseidon Earthshaker'
 }
 
+# Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
+# Election.voter_id: CSV column that marks the user's "unique id" (default value is 'Email address')
+timestamp_col = 'Timestamp'
+voter_id_col = 'Email address'
+
+##############
+# end of values you normally need to update for each run
+##############
+
 # create the Election object and feed it basic data from above
 e = Election()
 e.source_file = source_file
 e.vote_cols = vote_cols
+e.timestamp_col = timestamp_col
+e.voter_id_col = voter_id_col
 
-# Election.timestamp_col: CSV column that indicates when vote was taken (default value is 'Timestamp')
-# Election.voter_id: CSV column that marks the user's "unique id" (default value is 'Email address')
-e.timestamp_col = 'Timestamp'
-e.voter_id_col = 'Email address'
 
 # The system is able to refer to a CSV file that lists all eligible voters. From there you can simply report on those
 # that do no appear in the "registration" file, or run the results leaving those people out.
