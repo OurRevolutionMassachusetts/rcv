@@ -108,7 +108,9 @@ class Election:
             self.knockouts.append(knockout)
 
         for row in self.votes:
-            new_row = [choice for choice in row if (not choice or choice not in self.knockouts)]
+            # if there are knockouts due to subsequent rounds of balloting, don't want to count them so all other prefs
+            # get promoted
+            new_row = [choice for choice in row if choice not in self.knockouts]
             row = new_row
             if row[0]:
                 self.results[row[0]] += 1
