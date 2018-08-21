@@ -157,9 +157,11 @@ class Election:
             self.find_interlopers()
 
         print(str(len(self.interlopers)) + " questionable voters")
+        print('------')
         print(*(row[self.voter_id_col] for row in self.interlopers), sep='\n')
 
     def report(self):
+        print()
         ballot_name = 'ballot #' + str(self.ballots_run)
         print(ballot_name)
         print('--------')

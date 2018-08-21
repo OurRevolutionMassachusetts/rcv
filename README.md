@@ -16,6 +16,8 @@ email,First Preference,Second Preference
 bernie@ourrev.org,candidate 1,candidate 2
 ```
 
+also need to update the swap_cols attr
+
 Sample usage here:
 
 ```python3
