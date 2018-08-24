@@ -161,6 +161,7 @@ class Election:
 
         # keys to drop
         drop = ['Zip Code:', 'Phone Number:', 'Address (Number, Street, Apt):', 'Last Name:', 'Email Address', 'City:', 'First Name:', 'Affiliate/Caucus/NA:']
+        raise(NotImplementedError("this is too static; rather, should simply gather timestamp and the three columns identified as the pref columns"))
 
         redacted = []
         for row in valid_votes:
