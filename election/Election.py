@@ -8,6 +8,7 @@ class Election:
         self.finish_line = finish_line
         self.interlopers = []
         self.knockouts = []
+        self.noisy = True
         self.order = order
         self.raw_vote_count = 0
         self.registration_data = []
@@ -130,7 +131,8 @@ class Election:
             # are we dropping this voter for being unregistered?
             if drop_interlopers:
                 if row[self.voter_id_col] in interlopers:
-                    print('!!! dropping vote for ' + row[self.voter_id_col] + ' (not registered)')
+                    if self.noisy:
+                        print('!!! dropping vote for ' + row[self.voter_id_col] + ' (not registered)')
                     continue
 
             vote_dict = {}
@@ -151,6 +153,36 @@ class Election:
                     vote.append(None)
 
             self.votes.append(vote)
+
+    # prints out redacted results for RC inspection of results
+    def redact(self, file=None):
+        flat_interlopers = [row[self.voter_id_col] for row in self.interlopers]
+        valid_votes = [row for row in self.data if row[self.voter_id_col] not in flat_interlopers]
+
+        # keys to drop
+        drop = ['Zip Code:', 'Phone Number:', 'Address (Number, Street, Apt):', 'Last Name:', 'Email Address', 'City:', 'First Name:', 'Affiliate/Caucus/NA:']
+
+        redacted = []
+        for row in valid_votes:
+            redacted_row = row
+            for key in drop:
+                redacted_row.pop(key, None)
+            redacted.append(redacted_row)
+
+        if file:
+            with open(file, 'w', newline='') as csvfile:
+                fieldnames = [self.timestamp_col]
+                for key in list(redacted[0].keys()):
+                    if key not in fieldnames:
+                        fieldnames.append(key)
+
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+                writer.writeheader()
+                for row in redacted:
+                    writer.writerow(row)
+
+        return redacted
 
     def registration_report(self):
         if self.interlopers == []:
