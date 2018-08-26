@@ -159,15 +159,14 @@ class Election:
         flat_interlopers = [row[self.voter_id_col] for row in self.interlopers]
         valid_votes = [row for row in self.data if row[self.voter_id_col] not in flat_interlopers]
 
-        # keys to drop
-        drop = ['Zip Code:', 'Phone Number:', 'Address (Number, Street, Apt):', 'Last Name:', 'Email Address', 'City:', 'First Name:', 'Affiliate/Caucus/NA:']
-        raise(NotImplementedError("this is too static; rather, should simply gather timestamp and the three columns identified as the pref columns"))
+        # keys to keep
+        keepers = [self.timestamp_col] + list(self.vote_cols.keys())
 
         redacted = []
         for row in valid_votes:
-            redacted_row = row
-            for key in drop:
-                redacted_row.pop(key, None)
+            redacted_row = {}
+            for key in keepers:
+                redacted_row[key] = row[key]
             redacted.append(redacted_row)
 
         if file:
