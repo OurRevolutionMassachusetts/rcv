@@ -31,8 +31,8 @@ class ScottishStvElection(Election):
 
         if self.noisy:
             print()
-            print('multiplier set to ' + str(multiplier) + ' (' + str(excess['excess']) + ' excess votes divided by '
-                  + str(excess['total']) + ' total)')
+            print('multiplier set for ' + choice + ' excess votes to ' + str(multiplier) + ' (' +
+                  str(excess['excess']) + ' excess votes divided by ' + str(excess['total']) + ' total)')
 
         self.multiplier = multiplier
         return multiplier
@@ -213,6 +213,11 @@ class ScottishStvElection(Election):
                       str(min_val) + " votes")
             else:
                 print("there is no obvious knockout candidate")
+
+            print()
+            print('===============')
+            print('ballot #' + str(self.ballots_run) + ' complete')
+            print('===============')
 
         else:
             print('===============')
