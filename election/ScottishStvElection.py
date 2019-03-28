@@ -70,7 +70,8 @@ class ScottishStvElection(Election):
         self.report()
 
     def next_ballot__knockout(self, knockout=None):
-        self.results = {v: 0 for (k, v) in self.vote_cols.items()}
+        if not self.results:
+            self.results = {v: 0 for (k, v) in self.vote_cols.items()}
         if knockout:
             self.knockouts.append(knockout)
 
@@ -85,7 +86,8 @@ class ScottishStvElection(Election):
     def next_ballot__redistribute(self, redistribute_from):
         self.redistribute_votes(redistribute_from=redistribute_from)
 
-        self.results = {v: 0 for (k, v) in self.vote_cols.items()}
+        if not self.results:
+            self.results = {v: 0 for (k, v) in self.vote_cols.items()}
 
         for row in self.redistributed_votes:
             # if there are knockouts due to subsequent rounds of balloting, don't want to count them so all other prefs
