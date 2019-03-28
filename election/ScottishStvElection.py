@@ -48,6 +48,10 @@ class ScottishStvElection(Election):
         return excess
 
     def next_ballot(self, redistribute=None, knockout=None):
+        print("===============")
+        print("ballot #" + str(self.ballots_run + 1) + " starting")
+        print("===============")
+
         if redistribute and knockout:
             raise ValueError("can't run a ScottishStvElection.next_ballot() with both a redistribute and knockout")
 
@@ -70,18 +74,33 @@ class ScottishStvElection(Election):
         self.report()
 
     def next_ballot__knockout(self, knockout=None):
+        if self.noisy and knockout:
+            print()
+            print("redistributing votes for knocked out candidate " + knockout)
+
         if not self.results:
             self.results = {v: 0 for (k, v) in self.vote_cols.items()}
         if knockout:
             self.knockouts.append(knockout)
 
         for row in self.votes:
+            if knockout and row[0] != knockout:
+                continue
+
+            if self.noisy and knockout:
+                print("redistributing after knockout from following ballot:")
+                print(row)
+
             # if there are knockouts due to subsequent rounds of balloting, don't want to count them so all other prefs
             # get promoted
             new_row = [choice for choice in row if choice not in self.knockouts]
             row = new_row
             if row[0]:
                 self.results[row[0]] += 1
+
+            if self.noisy and knockout:
+                print("vote gets redistributed to " + str(row[0]) + ' at value of 1')
+                print()
 
     def next_ballot__redistribute(self, redistribute_from):
         self.redistribute_votes(redistribute_from=redistribute_from)
@@ -100,10 +119,11 @@ class ScottishStvElection(Election):
                     print("applying " + str(self.multiplier) + " to " + row[0])
 
     def redistribute_votes(self, redistribute_from):
-        self.derive_multiplier(choice=redistribute_from)
         if self.noisy:
             print()
             print("redistributing votes for " + redistribute_from)
+
+        self.derive_multiplier(choice=redistribute_from)
 
         self.redistributed_votes = []
         for voter_ballot in self.votes:
@@ -129,7 +149,7 @@ class ScottishStvElection(Election):
                 self.redistributed_votes.append(new_voter_ballot)
 
                 if self.noisy:
-                    print("redistributing from following:")
+                    print("redistributing from following ballot:")
                     print(voter_ballot)
                     print("vote gets redistributed to " + str(new_voter_ballot[0]) + ' at value of ' + str(self.multiplier))
                     print()
@@ -163,6 +183,7 @@ class ScottishStvElection(Election):
                 continue
 
             winner = ''
+            knockout = ''
             if raw >= self.threshold:
                 excess = self.handle_excess_votes(raw_count=raw, choice=choice)
                 winner = ' ** WINNER ** with ' + str(excess) + ' excess votes'
@@ -170,9 +191,11 @@ class ScottishStvElection(Election):
                     self.prior_winners.append(choice)
                 if self.excess_votes[choice]['used']:
                     winner += ' (votes already redistributed)'
+            if choice in self.knockouts:
+                knockout = ' <---- already knocked out'
 
             report.append(
-                (choice + ': ' + str(raw) + winner))
+                (choice + ': ' + str(raw) + winner + knockout))
 
         report.sort()
         print(*(r for r in report), sep="\n")
@@ -212,11 +235,13 @@ class ScottishStvElection(Election):
                     print('* ' + e + callout + ': ' + str(self.results[e]) + ' votes')
             print()
 
+            """
             if len(candidates_by_tally[min_val]) == 1:
                 print("the obvious knockout candidate would be " + candidates_by_tally[min_val][0] + " with " +
                       str(min_val) + " votes")
             else:
                 print("there is no obvious knockout candidate")
+            """
 
             print()
             print('===============')
