@@ -2,7 +2,7 @@ import csv
 
 
 class Election:
-    def __init__(self, vote_cols=None, source_file=None, order=None, finish_line=60):
+    def __init__(self, vote_cols=None, source_file=None, order=None, finish_line=60, run_dedupe=True):
         self.data = None
         self.ballots_run = 0
         self.finish_line = finish_line
@@ -15,6 +15,7 @@ class Election:
         self.registration_file = None
         self.registration_voterid_col = 'email'
         self.results = {}
+        self.run_dedupe = run_dedupe
         self.source_dir = './source/'
         self.source_file = source_file
         self.swap_cols = []
@@ -37,7 +38,8 @@ class Election:
             self.swap_vote_cols()
         self.raw_vote_count = len(self.data)
         self.cleanup_unicode()
-        self.dedupe()
+        if self.run_dedupe:
+            self.dedupe()
 
         if self.registration_file:
             self.load_registration()
