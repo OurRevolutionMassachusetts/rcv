@@ -43,7 +43,7 @@ class ScottishStvElection(Election):
 
     def handle_excess_votes(self, raw_count, choice):
         excess = round(raw_count - self.threshold, 5)
-        if excess > 0:
+        if excess > 0 and choice not in self.excess_votes:
             self.excess_votes[choice] = {'excess': excess, 'total': raw_count, 'used': False}
         return excess
 
@@ -168,6 +168,8 @@ class ScottishStvElection(Election):
                 winner = ' ** WINNER ** with ' + str(excess) + ' excess votes'
                 if choice not in self.prior_winners:
                     self.prior_winners.append(choice)
+                if self.excess_votes[choice]['used']:
+                    winner += ' (votes already redistributed)'
 
             report.append(
                 (choice + ': ' + str(raw) + winner))
@@ -207,7 +209,7 @@ class ScottishStvElection(Election):
                     callout = ''
                     if e in candidates_by_tally[max_val]:
                         callout = ' <---- max vote getter'
-                    print('* ' + e + callout)
+                    print('* ' + e + callout + ': ' + str(self.results[e]) + ' votes')
             print()
 
             if len(candidates_by_tally[min_val]) == 1:
